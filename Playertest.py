@@ -26,5 +26,7 @@ while True:
             exit()
     screen.blit(background, (0,0))
     screen.blit(player.image, player.pos)
+    player.update()
+
     pygame.display.update()
     clock.tick(FPS)
