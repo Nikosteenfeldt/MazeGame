@@ -2,20 +2,15 @@ import pygame
 from sys import exit
 import os
 import math
-import Assets
-  #Gør vi har adgang til værdierne i PlayerClass
+from Indstillinger import *
 
-screenWidth = 1280    #Gør det nemmere at ændre skærmbredden senere
-screenHeight = 720    #Gør det nemmere at ændre skærmhøjden senere
-FPS = 60
+
 
 pygame.init()
 
 
-screen = pygame.display.set_mode((screenWidth, screenHeight))
-clock = pygame.time.Clock()
 
-background = pygame.image.load("Assets/Background.jpg").convert()
+background = pygame.image.load("../GameGame/Assets/Background.jpg").convert()
 from Playerclassfile import PlayerClass
 player = PlayerClass()
 while True:
