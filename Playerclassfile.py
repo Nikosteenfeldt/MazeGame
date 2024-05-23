@@ -13,11 +13,15 @@ class PlayerClass:
     yposition = random.randint(0,720 )
     scalefactor = 50/441 #Skalere vores billede til den størrelse vi vil have det
     points = 0 #Bruges potetielt senere til at holde styre på scoren mellem to spillere
+    newrot = 0 #Forhindrer rotationen i at fordobles når vi loader spilleren ind
     def __init__(self):
         super().__init__()
         self.image = pygame.transform.rotozoom(pygame.image.load("../GameGame/Assets/Cat.png").convert_alpha(),(self.rotation+90),self.scalefactor) #Variabel for billedet
+        self.pos = pygame.math.Vector2(self.xposition, self.yposition)  # Spillerens position i form af en vektor
         self.base_image = self.image
-        self.pos = pygame.math.Vector2(self.xposition, self.yposition) #Spillerens position i form af en vektor
+        self.hitbox_rect = self.base_image.get_rect(center = self.pos)
+        self.rect = self.hitbox_rect.copy()
+
 
 
     def player_input (self):
@@ -32,19 +36,24 @@ class PlayerClass:
             self.y_velocity = -1*self.maxSpeed * math.sin(math.radians(self.rotation)) #Tilføjer -1 for at få den modsatte y værdi ift w keypress
         if keys[pygame.K_a]:
             self.rotation += 5
+            self.newrot += 5  #Opdaterer begge variabler for at både billedets og bevægelses rotation forbliver ens
         if keys[pygame.K_d]:
             self.rotation -= 5
+            self.newrot -= 5
 
 
 
     def move (self):
+        self.image = pygame.transform.rotate(self.base_image, ((self.newrot)))
+        self.rect = self.image.get_rect(center = self.hitbox_rect.center)
         self.pos += pygame.math.Vector2(self.x_velocity, self.y_velocity) #Tilføjer hastigheden til dens position
+        self.hitbox_rect.center = self.pos
+        self.rect.center = self.hitbox_rect.center
+
 
     def update(self):
         self.player_input() #
         self.move() #
-
-    def draw
 
 
 
