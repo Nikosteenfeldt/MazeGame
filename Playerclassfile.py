@@ -6,18 +6,18 @@ from Indstillinger import *
 
 
 class PlayerClass(pygame.sprite.Sprite):
-    maxSpeed = 10
+    maxSpeed = 8
     size = 50
     rotation = random.randint(0,359) #Giver en tilfældig rotation
-    xposition = random.randint(0,1280 ) #Giver et tilfældigt x og y koordinat
-    yposition = random.randint(0,720 )
+    xposition = random.randint(0,700 ) #Giver et tilfældigt x og y koordinat
+    yposition = random.randint(0,700 )
     scalefactor = 50/441 #Skalere vores billede til den størrelse vi vil have det
     points = 0 #Bruges potetielt senere til at holde styre på scoren mellem to spillere
     newrot = 0  # Forhindrer rotationen i at fordobles når vi loader spilleren ind
 
     def __init__(self):
         super().__init__()
-        self.image = pygame.transform.rotozoom(pygame.image.load("Assets/Cat.png").convert_alpha(),(self.rotation + 90), self.scalefactor)  # Variabel for billedet
+        self.image = pygame.transform.rotozoom(pygame.image.load("Assets/Cat.png").convert_alpha(),(self.rotation + 90), self.scalefactor)  # Variabel for billedet, med rotation og størrelse
         self.pos = pygame.math.Vector2(self.xposition, self.yposition)  # Spillerens position i form af en vektor
         self.base_image = self.image
         self.hitbox_rect = self.base_image.get_rect(center=self.pos)
@@ -37,8 +37,8 @@ class PlayerClass(pygame.sprite.Sprite):
             self.x_velocity = self.maxSpeed * math.cos(math.radians(self.rotation)) #Fjerner -1 for at få den modsatte x værdi ift w keypress
             self.y_velocity = -1*self.maxSpeed * math.sin(math.radians(self.rotation)) #Tilføjer -1 for at få den modsatte y værdi ift w keypress
         if keys[pygame.K_a]:
-            self.rotation += 5
-            self.newrot += 5  # Opdaterer begge variabler for at både billedets og bevægelses rotation forbliver ens
+            self.rotation += 5 #Ændrer spillerens rotation, vi bruger det til skud og collison detection
+            self.newrot += 5  # Opdaterer begge variabler for at både billedets og bevægelses rotation forbliver ens. Ellers ville rotationen på billedet fordobles.
             Bullet.rotation = self.rotation
         if keys[pygame.K_d]:
             self.rotation -= 5
@@ -59,21 +59,21 @@ class PlayerClass(pygame.sprite.Sprite):
             test.bullet_group.add(self.bullet)
             test.all_sprites_group.add(self.bullet)
 
-    def bordercontrol(self):
+    def bordercontrol(self): #Collision detector med borderen
         hypotenuse = 25*math.sqrt(2)
-        yderstx = abs(hypotenuse * math.cos(math.radians(self.rotation+45)))
-        ydersty = abs(hypotenuse * math.sin(math.radians(self.rotation+45)))
-        inderstx = abs(hypotenuse * math.cos(math.radians(self.rotation - 45)))
-        indersty = abs(hypotenuse * math.sin(math.radians(self.rotation - 45)))
-        xlist = [yderstx, inderstx]
-        ylist = [ydersty, indersty]
-        xpunkt = max(xlist)
-        ypunkt = max(ylist)
-        if self.hitbox_rect.centerx + xpunkt > screenHeight:
-            self.xposition = screenWidth - xpunkt
+        yderstx = abs(hypotenuse * math.cos(math.radians(self.rotation + 45))) #Regnestykket for at finde xkoordinatet på den ene kant i rektanglen.
+        ydersty = abs(hypotenuse * math.sin(math.radians(self.rotation + 45))) #Regnestykket for at finde ykoordinatet på den ene kant i rektanglen.
+        inderstx = abs(hypotenuse * math.cos(math.radians(self.rotation - 45))) #Regnestykket for at finde xkoordinatet på den anden kant i rektanglen.
+        indersty = abs(hypotenuse * math.sin(math.radians(self.rotation - 45))) #Regnestykket for at finde xkoordinatet på den anden kant i rektanglen.
+        xlist = [yderstx, inderstx] # Laver en liste med de to x punkter
+        ylist = [ydersty, indersty] # Laver en liste med de to y punkter
+        xpunkt = max(xlist) #Finder kanten med den større x værdi
+        ypunkt = max(ylist) #Finder kanten med den større y værdi
+        if self.hitbox_rect.centerx + xpunkt > screenHeight:  #Tjekker om punktet er uden for skærmen
+            self.xposition = screenWidth - xpunkt #Ændrer x koordinatet så det yderste punkt rører ved kanten af skærmen
             self.pos = (self.xposition, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery + ypunkt > screenHeight:
-            self.yposition = screenHeight - ypunkt
+        if self.hitbox_rect.centery + ypunkt > screenHeight: #
+            self.yposition = screenHeight - ypunkt #Ændrer y koordinatet så det nederste punkt rører ved kanten af skærmen
             self.pos = (self.hitbox_rect.centerx, self.yposition)
         if self.hitbox_rect.centerx - xpunkt < 0:
             self.xposition = xpunkt
@@ -84,7 +84,7 @@ class PlayerClass(pygame.sprite.Sprite):
 
 
     def move (self):
-        self.image = pygame.transform.rotate(self.base_image, ((self.newrot)))
+        self.image = pygame.transform.rotate(self.base_image, ((self.newrot))) #Roterer
         self.rect = self.image.get_rect(center=self.hitbox_rect.center)
         self.pos += pygame.math.Vector2(self.x_velocity, self.y_velocity)  # Tilføjer hastigheden til dens position
         self.hitbox_rect.center = self.pos

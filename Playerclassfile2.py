@@ -57,6 +57,28 @@ class PlayerClass2(pygame.sprite.Sprite):
             self.bullet = Bullet(spawn_bullet_pos[0], spawn_bullet_pos[1], self.rotation)
             test.bullet_group.add(self.bullet)
             test.all_sprites_group.add(self.bullet)
+    def bordercontrol(self):
+        hypotenuse = 25*math.sqrt(2)
+        yderstx = abs(hypotenuse * math.cos(math.radians(self.rotation+45)))
+        ydersty = abs(hypotenuse * math.sin(math.radians(self.rotation+45)))
+        inderstx = abs(hypotenuse * math.cos(math.radians(self.rotation - 45)))
+        indersty = abs(hypotenuse * math.sin(math.radians(self.rotation - 45)))
+        xlist = [yderstx, inderstx]
+        ylist = [ydersty, indersty]
+        xpunkt = max(xlist)
+        ypunkt = max(ylist)
+        if self.hitbox_rect.centerx + xpunkt > screenHeight:
+            self.xposition = screenWidth - xpunkt
+            self.pos = (self.xposition, self.hitbox_rect.centery)
+        if self.hitbox_rect.centery + ypunkt > screenHeight:
+            self.yposition = screenHeight - ypunkt
+            self.pos = (self.hitbox_rect.centerx, self.yposition)
+        if self.hitbox_rect.centerx - xpunkt < 0:
+            self.xposition = xpunkt
+            self.pos = (self.xposition, self.hitbox_rect.centery)
+        if self.hitbox_rect.centery - ypunkt < 0:
+            self.yposition = ypunkt
+            self.pos = (self.hitbox_rect.centerx, self.yposition)
 
     def move2 (self):
         self.image = pygame.transform.rotate(self.base_image, ((self.newrot)))
@@ -66,6 +88,7 @@ class PlayerClass2(pygame.sprite.Sprite):
         self.rect.center = self.hitbox_rect.center
     def update(self):
         self.player2_input() #
+        self.bordercontrol()
         self.move2() #
 
         if self.shoot_cooldown > 0:
