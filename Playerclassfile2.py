@@ -1,5 +1,4 @@
 import random
-import pygame
 import pygame.image
 import math
 from Indstillinger import *
@@ -8,8 +7,8 @@ from Indstillinger import *
 class PlayerClass2(pygame.sprite.Sprite):
     maxSpeed = 10
     rotation = random.randint(0,359) #Giver en tilfældig rotation
-    xposition = random.randint(0,1280 ) #Giver et tilfældigt x og y koordinat
-    yposition = random.randint(0,720 )
+    xposition = random.randint(0,700 ) #Giver et tilfældigt x og y koordinat
+    yposition = random.randint(0,700 )
     scalefactor = 50/391 #Skalere vores billede til den størrelse vi vil have det
     points = 0 #Bruges potetielt senere til at holde styre på scoren mellem to spillere
     newrot = 0  # Forhindrer rotationen i at fordobles når vi loader spilleren ind

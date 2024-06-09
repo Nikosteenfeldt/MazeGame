@@ -1,15 +1,10 @@
-import pygame
 from sys import exit
-import os
-import math
-from Indstillinger import *
 from Playerclassfile import *
 from Playerclassfile2 import *
 from Mazes import maze as maze
 
 pygame.init()
 
-background = pygame.image.load("Assets/Background.jpg").convert()
 player = PlayerClass()
 player_2 = PlayerClass2()
 all_sprites_group = pygame.sprite.Group()
@@ -40,6 +35,7 @@ while True:
             exit() #Lukker programmet
     all_sprites_group.draw(screen) #Tegner ting ind
     all_sprites_group.update()
+
 
     pygame.display.update()
     clock.tick(FPS)

@@ -7,6 +7,7 @@ from Indstillinger import *
 
 class PlayerClass(pygame.sprite.Sprite):
     maxSpeed = 10
+    size = 50
     rotation = random.randint(0,359) #Giver en tilfældig rotation
     xposition = random.randint(0,1280 ) #Giver et tilfældigt x og y koordinat
     yposition = random.randint(0,720 )
@@ -15,13 +16,12 @@ class PlayerClass(pygame.sprite.Sprite):
     newrot = 0  # Forhindrer rotationen i at fordobles når vi loader spilleren ind
 
     def __init__(self):
-        super(PlayerClass, self).__init__()
-        self.image = pygame.transform.rotozoom(pygame.image.load("Assets/Cat.png").convert_alpha(),(self.rotation + 90), self.scalefactor)  # Variabel for billedet med rotation og scale
+        super().__init__()
+        self.image = pygame.transform.rotozoom(pygame.image.load("Assets/Cat.png").convert_alpha(),(self.rotation + 90), self.scalefactor)  # Variabel for billedet
         self.pos = pygame.math.Vector2(self.xposition, self.yposition)  # Spillerens position i form af en vektor
-        self.base_image = self.image #Gør at vi rotere baseimagen i stedet for en allerede roteret billede
+        self.base_image = self.image
         self.hitbox_rect = self.base_image.get_rect(center=self.pos)
         self.rect = self.hitbox_rect.copy()
-        self.surf = pygame.Surface((self.scalefactor*441, self.scalefactor*441)) #Vi bruger scalefactor for at gøre det nemmere at justere størrelsen. Vi gange med 441 for at få dens reele størrelse.
         self.shoot = False
         self.shoot_cooldown = 0
 
@@ -59,6 +59,21 @@ class PlayerClass(pygame.sprite.Sprite):
             test.bullet_group.add(self.bullet)
             test.all_sprites_group.add(self.bullet)
 
+    def bordercontrol(self):
+        if self.hitbox_rect.centerx + 25 > screenWidth:
+            self.xposition = screenWidth - 25
+            self.pos = (self.xposition + 25, self.hitbox_rect.centery)
+        if self.hitbox_rect.centery + 25 > screenHeight:
+            self.yposition = screenHeight - 25
+            self.pos = (self.hitbox_rect.centerx, self.yposition)
+        if self.hitbox_rect.centerx < 25:
+            self.xposition = 25
+            self.pos = (self.xposition, self.hitbox_rect.centery)
+        if self.hitbox_rect.centery < 25:
+            self.yposition = 25
+            self.pos = (self.hitbox_rect.centerx, self.yposition)
+
+
     def move (self):
         self.image = pygame.transform.rotate(self.base_image, ((self.newrot)))
         self.rect = self.image.get_rect(center=self.hitbox_rect.center)
@@ -67,6 +82,7 @@ class PlayerClass(pygame.sprite.Sprite):
         self.rect.center = self.hitbox_rect.center
     def update(self):
         self.player_input() #
+        self.bordercontrol()
         self.move() #
 
         if self.shoot_cooldown > 0:

@@ -1,7 +1,7 @@
 import pygame
 
-screenWidth = 1280    #Gør det nemmere at ændre skærmbredden senere
-screenHeight = 720    #Gør det nemmere at ændre skærmhøjden senere
+screenWidth = 700    #Gør det nemmere at ændre skærmbredden senere
+screenHeight = 700    #Gør det nemmere at ændre skærmhøjden senere
 FPS = 60
 
 SHOOT_COOLDOWN = 20
