@@ -60,17 +60,26 @@ class PlayerClass(pygame.sprite.Sprite):
             test.all_sprites_group.add(self.bullet)
 
     def bordercontrol(self):
-        if self.hitbox_rect.centerx + 25 > screenWidth:
-            self.xposition = screenWidth - 25
-            self.pos = (self.xposition + 25, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery + 25 > screenHeight:
-            self.yposition = screenHeight - 25
-            self.pos = (self.hitbox_rect.centerx, self.yposition)
-        if self.hitbox_rect.centerx < 25:
-            self.xposition = 25
+        hypotenuse = 25*math.sqrt(2)
+        yderstx = abs(hypotenuse * math.cos(math.radians(self.rotation+45)))
+        ydersty = abs(hypotenuse * math.sin(math.radians(self.rotation+45)))
+        inderstx = abs(hypotenuse * math.cos(math.radians(self.rotation - 45)))
+        indersty = abs(hypotenuse * math.sin(math.radians(self.rotation - 45)))
+        xlist = [yderstx, inderstx]
+        ylist = [ydersty, indersty]
+        xpunkt = max(xlist)
+        ypunkt = max(ylist)
+        if self.hitbox_rect.centerx + xpunkt > screenHeight:
+            self.xposition = screenWidth - xpunkt
             self.pos = (self.xposition, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery < 25:
-            self.yposition = 25
+        if self.hitbox_rect.centery + ypunkt > screenHeight:
+            self.yposition = screenHeight - ypunkt
+            self.pos = (self.hitbox_rect.centerx, self.yposition)
+        if self.hitbox_rect.centerx - xpunkt < 0:
+            self.xposition = xpunkt
+            self.pos = (self.xposition, self.hitbox_rect.centery)
+        if self.hitbox_rect.centery - ypunkt < 0:
+            self.yposition = ypunkt
             self.pos = (self.hitbox_rect.centerx, self.yposition)
 
 
