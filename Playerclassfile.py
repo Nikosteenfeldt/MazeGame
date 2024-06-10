@@ -69,17 +69,21 @@ class PlayerClass(pygame.sprite.Sprite):
         ylist = [ydersty, indersty] # Laver en liste med de to y punkter
         xpunkt = max(xlist) #Finder kanten med den større x værdi
         ypunkt = max(ylist) #Finder kanten med den større y værdi
-        if self.hitbox_rect.centerx + xpunkt > screenHeight:  #Tjekker om punktet er uden for skærmen
+        if self.hitbox_rect.centerx + self.x_velocity + xpunkt > screenHeight:  #Tjekker om punktet er uden for skærmen
             self.xposition = screenWidth - xpunkt #Ændrer x koordinatet så det yderste punkt rører ved kanten af skærmen
+            self.x_velocity = 0
             self.pos = (self.xposition, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery + ypunkt > screenHeight: #
+        if self.hitbox_rect.centery + self.y_velocity + ypunkt > screenHeight: #
             self.yposition = screenHeight - ypunkt #Ændrer y koordinatet så det nederste punkt rører ved kanten af skærmen
+            self.y_velocity = 0
             self.pos = (self.hitbox_rect.centerx, self.yposition)
-        if self.hitbox_rect.centerx - xpunkt < 0:
+        if self.hitbox_rect.centerx + self.x_velocity - xpunkt < 0:
             self.xposition = xpunkt
+            self.x_velocity = 0
             self.pos = (self.xposition, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery - ypunkt < 0:
+        if self.hitbox_rect.centery + self.y_velocity - ypunkt < 0:
             self.yposition = ypunkt
+            self.y_velocity = 0
             self.pos = (self.hitbox_rect.centerx, self.yposition)
 
 

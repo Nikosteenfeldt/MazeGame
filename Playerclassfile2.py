@@ -67,19 +67,22 @@ class PlayerClass2(pygame.sprite.Sprite):
         ylist = [ydersty, indersty]
         xpunkt = max(xlist)
         ypunkt = max(ylist)
-        if self.hitbox_rect.centerx + xpunkt > screenHeight:
-            self.xposition = screenWidth - xpunkt
+        if self.hitbox_rect.centerx + self.x_velocity + xpunkt > screenHeight:  # Tjekker om punktet er uden for skærmen
+            self.xposition = screenWidth - xpunkt  # Ændrer x koordinatet så det yderste punkt rører ved kanten af skærmen
+            self.x_velocity = 0
             self.pos = (self.xposition, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery + ypunkt > screenHeight:
-            self.yposition = screenHeight - ypunkt
+        if self.hitbox_rect.centery + self.y_velocity + ypunkt > screenHeight:  #
+            self.yposition = screenHeight - ypunkt  # Ændrer y koordinatet så det nederste punkt rører ved kanten af skærmen
+            self.y_velocity = 0
             self.pos = (self.hitbox_rect.centerx, self.yposition)
-        if self.hitbox_rect.centerx - xpunkt < 0:
+        if self.hitbox_rect.centerx + self.x_velocity - xpunkt < 0:
             self.xposition = xpunkt
+            self.x_velocity = 0
             self.pos = (self.xposition, self.hitbox_rect.centery)
-        if self.hitbox_rect.centery - ypunkt < 0:
+        if self.hitbox_rect.centery + self.y_velocity - ypunkt < 0:
             self.yposition = ypunkt
+            self.y_velocity = 0
             self.pos = (self.hitbox_rect.centerx, self.yposition)
-
     def move2 (self):
         self.image = pygame.transform.rotate(self.base_image, ((self.newrot)))
         self.rect = self.image.get_rect(center=self.hitbox_rect.center)
